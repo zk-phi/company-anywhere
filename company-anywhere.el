@@ -34,6 +34,19 @@
     (apply fn command args)))
 (advice-add 'company-capf :around 'company-anywhere-capf)
 
+(defun company-anywhere-preview-show-at-point (pos completion)
+  (when (and (save-excursion
+               (goto-char pos)
+               (looking-at "\\(?:\\sw\\|\\s_\\)+"))
+             (save-match-data
+               (string-match (regexp-quote (match-string 0)) completion)))
+    (move-overlay company-preview-overlay (overlay-start company-preview-overlay) (match-end 0))
+    (let ((after-string (overlay-get company-preview-overlay 'after-string)))
+      (when after-string
+        (overlay-put company-preview-overlay 'display after-string)
+        (overlay-put company-preview-overlay 'after-string nil)))))
+(advice-add 'company-preview-show-at-point :after 'company-anywhere-preview-show-at-point)
+
 (defun company-anywhere-tng-frontend (command)
   (when (and (eq command 'update)
              company-selection
