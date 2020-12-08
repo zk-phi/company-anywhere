@@ -47,6 +47,15 @@
         (overlay-put company-preview-overlay 'after-string nil)))))
 (advice-add 'company-preview-show-at-point :after 'company-anywhere-preview-show-at-point)
 
+(with-eval-after-load "company-dwim"
+  (defun company-anywhere-dwim-overlay-show-at-point (pos prefix completion)
+    (when (and (looking-at "\\(?:\\sw\\|\\s_\\)+")
+               (save-match-data
+                 (string-match (regexp-quote (match-string 0)) completion)))
+      (move-overlay company-dwim-overlay (overlay-start company-dwim-overlay) (match-end 0))))
+  (advice-add 'company-dwim-overlay-show-at-point :after
+              'company-anywhere-dwim-overlay-show-at-point))
+
 (defun company-anywhere-tng-frontend (command)
   (when (and (eq command 'update)
              company-selection
