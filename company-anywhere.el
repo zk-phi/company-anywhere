@@ -2,7 +2,8 @@
 (require 'company-capf)
 
 (defun company-anywhere-after-finish (completion)
-  (when (and (looking-at "\\(?:\\sw\\|\\s_\\)+")
+  (when (and (stringp completion)
+             (looking-at "\\(?:\\sw\\|\\s_\\)+")
              (save-match-data
                (string-match (regexp-quote (match-string 0)) completion)))
     (delete-region (match-beginning 0) (match-end 0))))
