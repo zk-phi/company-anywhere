@@ -1,5 +1,6 @@
 (require 'company)
 (require 'company-capf)
+(require 'company-tng)
 
 (defun company-anywhere-after-finish (completion)
   (when (and (stringp completion)
@@ -32,5 +33,15 @@
              (t prefix)))))
     (apply fn command args)))
 (advice-add 'company-capf :around 'company-anywhere-capf)
+
+(defun company-anywhere-tng-frontend (command)
+  (when (and (eq command 'update)
+             company-selection
+             (looking-at "\\(?:\\sw\\|\\s_\\)+")
+             (save-match-data
+               (string-match (regexp-quote (match-string 0))
+                             (nth company-selection company-candidates))))
+    (move-overlay company-tng--overlay (overlay-start company-tng--overlay) (match-end 0))))
+(advice-add 'company-tng-frontend :after 'company-anywhere-tng-frontend)
 
 (provide 'company-anywhere)
