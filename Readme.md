@@ -8,10 +8,8 @@ note: this is a wip. there may be some unsupported backends
 
 ## Installation
 
-load this package and add `company-anywhere-drop-redundant-candidates`
-to `company-transformers`.
+just load this package
 
 ```emacs-lisp
 (require 'company-anywhere)
-(push 'company-anywhere-drop-redundant-candidates company-transformers)
 ```

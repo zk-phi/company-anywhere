@@ -47,15 +47,6 @@
         (overlay-put company-preview-overlay 'after-string nil)))))
 (advice-add 'company-preview-show-at-point :after 'company-anywhere-preview-show-at-point)
 
-(defun company-anywhere-drop-redundant-candidates (lst)
-  (delq
-   t
-   (mapcar (lambda (s)
-             (or (< (point-max) (+ (length s) (point)))
-                 (string= s (buffer-substring (point) (+ (length s) (point))))
-                 s))
-           lst)))
-
 (with-eval-after-load "company-dwim"
   (defun company-anywhere-dwim-overlay-show-at-point (pos prefix completion)
     (when (and (looking-at "\\(?:\\sw\\|\\s_\\)+")
